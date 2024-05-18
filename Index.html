@@ -8,11 +8,11 @@
 </head>
 <body>
   <div class="navbar">
-    <img id="userPhoto" class="user-photo" src="https://via.placeholder.com/40" alt="User Photo" onclick="toggleView('profile')">
     <div>
       <button onclick="toggleView('chat')">💬</button>
-      <button onclick="toggleView('settings')">⚙️</button>
     </div>
+    <img id="userPhoto" class="user-photo" src="https://via.placeholder.com/40" alt="User Photo" onclick="toggleView('profile')">
+    <button onclick="toggleView('settings')">⚙️</button>
   </div>
   <div class="content">
     <div id="settings" class="settings">
@@ -28,7 +28,7 @@
         <span id="charCount">0/500</span>
         <textarea id="messageInput" placeholder="Type your message here (Max 500 characters)" rows="3" maxlength="500"></textarea>
         <button onclick="sendMessage()">Send</button>
-        <button class="delete-all-button" onclick="deleteAllMessages()">Apagar todas as mensagens</button>
+        <button class="delete-button" onclick="deleteMessages()">X</button>
       </div>
     </div>
     <div id="profile" class="profile">
