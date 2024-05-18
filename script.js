@@ -119,3 +119,7 @@ function updateProfileView() {
   document.getElementById('profilePicture').src = profilePicture;
   document.getElementById('profileDescription').textContent = description;
         }
+function deleteAllMessages() {
+  localStorage.removeItem('messages');
+  document.getElementById('messages').innerHTML = '';
+}
