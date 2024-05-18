@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const savedProfilePicture = localStorage.getItem('profilePicture');
   const savedDescription = localStorage.getItem('description');
   const savedLastOnline = localStorage.getItem('lastOnline');
+  const savedMessages = JSON.parse(localStorage.getItem('messages')) || [];
+
   if (savedUsername) document.getElementById('usernameInputSettings').value = savedUsername;
   if (savedProfilePicture) {
     profilePictureUrl = savedProfilePicture;
@@ -13,6 +15,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (savedDescription) document.getElementById('descriptionInputSettings').value = savedDescription;
   if (savedLastOnline) lastOnline = savedLastOnline;
+
+  const messagesContainer = document.getElementById('messages');
+  savedMessages.forEach(message => {
+    messagesContainer.innerHTML += `
+      <div class="message">
+        <img src="${message.picture || 'https://via.placeholder.com/40'}" alt="Profile Picture" onclick="viewProfile('${message.username}', '${message.picture}', '${message.description}', '${message.lastOnline}')">
+        <div>
+          <div class="username" onclick="viewProfile('${message.username}', '${message.picture}', '${message.description}', '${message.lastOnline}')">${message.username}</div>
+          <div>${message.text.replace(/\n/g, '<br>')}</div>
+          <div class="timestamp">${message.timestamp}</div>
+        </div>
+      </div>`;
+  });
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
 });
 
 function toggleView(view) {
@@ -51,19 +67,33 @@ function sendMessage() {
   const messageText = messageInput.value.trim();
   if (!messageText) return;
   const now = new Date();
-  document.getElementById('messages').innerHTML += `
+  const message = {
+    username: username,
+    picture: profilePictureUrl,
+    description: localStorage.getItem('description'),
+    text: messageText,
+    timestamp: now.toLocaleString(),
+    lastOnline: lastOnline,
+  };
+
+  const messagesContainer = document.getElementById('messages');
+  messagesContainer.innerHTML += `
     <div class="message">
       <img src="${profilePictureUrl || 'https://via.placeholder.com/40'}" alt="Profile Picture" onclick="viewProfile('${username}', '${profilePictureUrl}', '${localStorage.getItem('description')}', '${lastOnline}')">
       <div>
         <div class="username" onclick="viewProfile('${username}', '${profilePictureUrl}', '${localStorage.getItem('description')}', '${lastOnline}')">${username}</div>
         <div>${messageText.replace(/\n/g, '<br>')}</div>
-        <div class="timestamp">${now.toLocaleString()}</div>
+        <div class="timestamp">${message.timestamp}</div>
       </div>
     </div>`;
   messageInput.value = '';
   document.getElementById('charCount').textContent = '0/500';
   messageInput.focus();
-  document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+  const savedMessages = JSON.parse(localStorage.getItem('messages')) || [];
+  savedMessages.push(message);
+  localStorage.setItem('messages', JSON.stringify(savedMessages));
 }
 
 function viewProfile(username, picture, description, lastOnline) {
