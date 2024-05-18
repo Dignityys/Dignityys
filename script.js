@@ -1,11 +1,9 @@
 let profilePictureUrl = '';
-let lastOnline = new Date().toLocaleString();
 
 document.addEventListener('DOMContentLoaded', () => {
   const savedUsername = localStorage.getItem('username');
   const savedProfilePicture = localStorage.getItem('profilePicture');
   const savedDescription = localStorage.getItem('description');
-  const savedLastOnline = localStorage.getItem('lastOnline');
   const savedMessages = JSON.parse(localStorage.getItem('messages')) || [];
 
   if (savedUsername) document.getElementById('usernameInputSettings').value = savedUsername;
@@ -14,15 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('userPhoto').src = savedProfilePicture;
   }
   if (savedDescription) document.getElementById('descriptionInputSettings').value = savedDescription;
-  if (savedLastOnline) lastOnline = savedLastOnline;
 
   const messagesContainer = document.getElementById('messages');
   savedMessages.forEach(message => {
     messagesContainer.innerHTML += `
       <div class="message">
-        <img src="${message.picture || 'https://via.placeholder.com/40'}" alt="Profile Picture" onclick="viewProfile('${message.username}', '${message.picture}', '${message.description}', '${message.lastOnline}')">
+        <img src="${message.picture || 'https://via.placeholder.com/40'}" alt="Profile Picture" onclick="viewProfile('${message.username}', '${message.picture}', '${message.description}')">
         <div>
-          <div class="username" onclick="viewProfile('${message.username}', '${message.picture}', '${message.description}', '${message.lastOnline}')">${message.username}</div>
+          <div class="username" onclick="viewProfile('${message.username}', '${message.picture}', '${message.description}')">${message.username}</div>
           <div>${message.text.replace(/\n/g, '<br>')}</div>
           <div class="timestamp">${message.timestamp}</div>
         </div>
@@ -59,7 +56,6 @@ function saveSettings() {
     localStorage.setItem('username', username);
     localStorage.setItem('profilePicture', profilePictureUrl);
     localStorage.setItem('description', description);
-    localStorage.setItem('lastOnline', lastOnline);
     alert('Configurações salvas!');
   }
 }
@@ -76,50 +72,50 @@ function sendMessage() {
     description: localStorage.getItem('description'),
     text: messageText,
     timestamp: now.toLocaleString(),
-    lastOnline: lastOnline,
   };
 
   const messagesContainer = document.getElementById('messages');
   messagesContainer.innerHTML += `
     <div class="message">
-      <img src="${profilePictureUrl || 'https://via.placeholder.com/40'}" alt="Profile Picture" onclick="viewProfile('${username}', '${profilePictureUrl}', '${localStorage.getItem('description')}', '${lastOnline}')">
+      <img src="${message.picture || 'https://via.placeholder.com/40'}" alt="Profile Picture" onclick="viewProfile('${message.username}', '${message.picture}', '${message.description}')">
       <div>
-        <div class="username" onclick="viewProfile('${username}', '${profilePictureUrl}', '${localStorage.getItem('description')}', '${lastOnline}')">${username}</div>
-        <div>${messageText.replace(/\n/g, '<br>')}</div>
-        <div class="timestamp">${now.toLocaleString()}</div>
+        <div class="username" onclick="viewProfile('${message.username}', '${message.picture}', '${message.description}')">${message.username}</div>
+        <div>${message.text.replace(/\n/g, '<br>')}</div>
+        <div class="timestamp">${message.timestamp}</div>
       </div>
     </div>`;
-
   messageInput.value = '';
   document.getElementById('charCount').textContent = '0/500';
-  messageInput.focus();
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-  // Save messages to local storage
   const savedMessages = JSON.parse(localStorage.getItem('messages')) || [];
   savedMessages.push(message);
   localStorage.setItem('messages', JSON.stringify(savedMessages));
 }
 
-function viewProfile(username, picture, description, lastOnline) {
+function deleteMessages() {
+  localStorage.removeItem('messages');
+  document.getElementById('messages').innerHTML = '';
+}
+
+document.getElementById('messageInput').addEventListener('input', () => {
+  const charCount = document.getElementById('messageInput').value.length;
+  document.getElementById('charCount').textContent = `${charCount}/500`;
+});
+
+function viewProfile(username, picture, description) {
   document.getElementById('profileUsername').textContent = username;
   document.getElementById('profilePicture').src = picture || 'https://via.placeholder.com/100';
-  document.getElementById('profileDescription').textContent = description || 'No description provided.';
-  document.getElementById('profileLastOnline').textContent = `Last online: ${lastOnline}`;
+  document.getElementById('profileDescription').textContent = description || 'No description available';
   toggleView('profile');
 }
 
-document.getElementById('messageInput').addEventListener('keydown', function(event) {
-  if (event.key === 'Enter') {
-    if (event.shiftKey) {
-      const start = this.selectionStart;
-      const end = this.selectionEnd;
-      this.value = this.value.substring(0, start) + '\n' + this.value.substring(end);
-      this.selectionStart = this.selectionEnd = start + 1;
-    } else {
-      event.preventDefault();
-      sendMessage();
-    }
-  }
-  document.getElementById('charCount').textContent = `${this.value.length}/500`;
-});
+function updateProfileView() {
+  const username = localStorage.getItem('username') || 'Anonymous';
+  const profilePicture = localStorage.getItem('profilePicture') || 'https://via.placeholder.com/100';
+  const description = localStorage.getItem('description') || 'No description available';
+
+  document.getElementById('profileUsername').textContent = username;
+  document.getElementById('profilePicture').src = profilePicture;
+  document.getElementById('profileDescription').textContent = description;
+        }
