@@ -29,6 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>`;
   });
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+  // Start in chat view
+  toggleView('chat');
 });
 
 function toggleView(view) {
