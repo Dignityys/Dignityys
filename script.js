@@ -86,14 +86,16 @@ function sendMessage() {
       <div>
         <div class="username" onclick="viewProfile('${username}', '${profilePictureUrl}', '${localStorage.getItem('description')}', '${lastOnline}')">${username}</div>
         <div>${messageText.replace(/\n/g, '<br>')}</div>
-        <div class="timestamp">${message.timestamp}</div>
+        <div class="timestamp">${now.toLocaleString()}</div>
       </div>
     </div>`;
+
   messageInput.value = '';
   document.getElementById('charCount').textContent = '0/500';
   messageInput.focus();
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
+  // Save messages to local storage
   const savedMessages = JSON.parse(localStorage.getItem('messages')) || [];
   savedMessages.push(message);
   localStorage.setItem('messages', JSON.stringify(savedMessages));
