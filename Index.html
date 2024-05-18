@@ -8,21 +8,21 @@
 </head>
 <body>
   <div class="navbar">
-    <div>
-      <button onclick="toggleView('settings')">⚙️</button>
-      <button onclick="toggleView('chat')">💬</button>
-    </div>
     <img id="userPhoto" class="user-photo" src="https://via.placeholder.com/40" alt="User Photo" onclick="toggleView('profile')">
+    <div>
+      <button onclick="toggleView('chat')">💬</button>
+      <button onclick="toggleView('settings')">⚙️</button>
+    </div>
   </div>
   <div class="content">
-    <div id="settings" class="settings active">
+    <div id="settings" class="settings">
       <h2>Configurações</h2>
       <input type="file" id="profilePictureInput" accept="image/*" onchange="previewProfilePicture()">
       <input type="text" id="usernameInputSettings" placeholder="Enter your name">
       <textarea id="descriptionInputSettings" placeholder="Enter your description" rows="3"></textarea>
       <button onclick="saveSettings()">Salvar</button>
     </div>
-    <div id="chat" class="chat">
+    <div id="chat" class="chat active">
       <div id="messages" class="messages"></div>
       <div class="input-container">
         <span id="charCount">0/500</span>
