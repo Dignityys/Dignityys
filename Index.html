@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="navbar">
+    <div>
+      <button onclick="toggleView('settings')">⚙️</button>
+      <button onclick="toggleView('chat')">💬</button>
+    </div>
+    <img id="userPhoto" class="user-photo" src="https://via.placeholder.com/40" alt="User Photo" onclick="toggleView('profile')">
+  </div>
+  <div class="content">
+    <div id="settings" class="settings active">
+      <h2>Configurações</h2>
+      <input type="file" id="profilePictureInput" accept="image/*" onchange="previewProfilePicture()">
+      <input type="text" id="usernameInputSettings" placeholder="Enter your name">
+      <textarea id="descriptionInputSettings" placeholder="Enter your description" rows="3"></textarea>
+      <button onclick="saveSettings()">Salvar</button>
+    </div>
+    <div id="chat" class="chat">
+      <div id="messages" class="messages"></div>
+      <div class="input-container">
+        <span id="charCount">0/500</span>
+        <textarea id="messageInput" placeholder="Type your message here (Max 500 characters)" rows="3" maxlength="500"></textarea>
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+    <div id="profile" class="profile">
+      <span class="close" onclick="toggleView('chat')">×</span>
+      <img id="profilePicture" src="https://via.placeholder.com/100" alt="Profile Picture">
+      <h2 id="profileUsername">Username</h2>
+      <p id="profileDescription">Description</p>
+      <p id="profileLastOnline">Last online: </p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
